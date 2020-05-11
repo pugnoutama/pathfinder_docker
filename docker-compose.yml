@@ -1,0 +1,28 @@
+version: "3"
+
+services:
+  db:
+    image: mysql
+    ports: "3306:3306"
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment: 
+      MYSQL_ROOT_PASSWORD: example
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: php ./index.php
+    expose: 
+      - 8000
+    depends_on:
+      - db
+  nginx:
+    image: nginx:1.15-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes: 
+      - ./nginx/data
+    
+    
